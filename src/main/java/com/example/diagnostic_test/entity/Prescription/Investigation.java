@@ -14,7 +14,7 @@ public class Investigation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String investigations;
+    private String investigation;
 
     @ManyToOne
     @JoinColumn(name = "prescription_id", nullable = false)
@@ -29,12 +29,12 @@ public class Investigation {
         this.id = id;
     }
 
-    public String getInvestigations() {
-        return investigations;
+    public String getInvestigation() {
+        return investigation;
     }
 
-    public void setInvestigations(String investigations) {
-        this.investigations = investigations;
+    public void setInvestigation(String investigations) {
+        this.investigation = investigations;
     }
 
     public Prescription getPrescription() {

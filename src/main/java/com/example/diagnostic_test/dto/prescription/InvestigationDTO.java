@@ -2,7 +2,7 @@ package com.example.diagnostic_test.dto.prescription;
 
 public class InvestigationDTO {
     private long id;
-    private String investigations;
+    private String investigation;
 
     public long getId() {
         return id;
@@ -12,11 +12,11 @@ public class InvestigationDTO {
         this.id = id;
     }
 
-    public String getInvestigations() {
-        return investigations;
+    public String getInvestigation() {
+        return investigation;
     }
 
-    public void setInvestigations(String investigations) {
-        this.investigations = investigations;
+    public void setInvestigation(String investigation) {
+        this.investigation = investigation;
     }
 }

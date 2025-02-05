@@ -27,7 +27,7 @@ public class PrescriptionMapper {
 
         prescription.setInvestigations(dto.getInvestigations().stream().map(i -> {
             Investigation investigation = new Investigation();
-            investigation.setInvestigations(i.getInvestigations());
+            investigation.setInvestigation(i.getInvestigation());
             investigation.setPrescription(prescription);
             return investigation;
         }).collect(Collectors.toList()));
@@ -69,7 +69,7 @@ public class PrescriptionMapper {
 
         dto.setInvestigations(prescription.getInvestigations().stream().map(i -> {
             InvestigationDTO investigationDTO = new InvestigationDTO();
-            investigationDTO.setInvestigations(i.getInvestigations());
+            investigationDTO.setInvestigation(i.getInvestigation());
             return investigationDTO;
         }).collect(Collectors.toList()));
 
