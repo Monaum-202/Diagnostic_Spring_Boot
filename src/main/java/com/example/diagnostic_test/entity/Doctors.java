@@ -3,6 +3,7 @@ package com.example.diagnostic_test.entity;
 import com.example.diagnostic_test.dto.DoctorsDTO;
 import com.example.diagnostic_test.entity.Prescription.Prescription;
 import com.example.diagnostic_test.entity.diagonesticEntry.DiagnosticMoneyReceipt;
+import com.example.diagnostic_test.entity.doctor.DoctorNote;
 import com.example.diagnostic_test.entity.security.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -54,6 +55,11 @@ public class Doctors {
     @ToString.Exclude
     @JsonIgnore
     private List<DiagnosticMoneyReceipt> diagnosticMoneyReceipts;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<DoctorNote> doctorNote;
 
     // Mapping to DTO
     public DoctorsDTO mapToDTO() {

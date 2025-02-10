@@ -26,6 +26,8 @@ public class DiagnosticMoneyReceipt {
     private String mobile;
     private LocalDateTime createdAt;
 
+    private String createdBy;
+
 
     private double totalAmount;
     private double discount;
@@ -144,7 +146,13 @@ public class DiagnosticMoneyReceipt {
         this.diagonesticTests = diagonesticTests;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     // Method to map DTO to Entity
     public void mapFromDTO(DiagnosticMoneyReciptDTo dto, Doctors doctor, List<DiagnoTests> tests) {
@@ -152,6 +160,7 @@ public class DiagnosticMoneyReceipt {
         this.age = dto.getAge();
         this.sex = dto.getSex();
         this.mobile = dto.getMobile();
+        this.createdBy=dto.getCreatedBy();
         this.totalAmount = dto.getTotalAmount();
         this.discount = dto.getDiscount();
         this.payableAmount = dto.getPayableAmount();
@@ -169,6 +178,7 @@ public class DiagnosticMoneyReceipt {
         dto.setAge(this.age);
         dto.setSex(this.sex);
         dto.setMobile(this.mobile);
+        dto.setCreatedBy(this.createdBy);
         dto.setTotalAmount(this.totalAmount);
         dto.setDiscount(this.discount);
         dto.setPayableAmount(this.payableAmount);

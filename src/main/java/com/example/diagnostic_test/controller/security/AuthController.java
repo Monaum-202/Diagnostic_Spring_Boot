@@ -122,6 +122,12 @@ public class AuthController {
           roles.add(modRole);
 
           break;
+          case "labEntry":
+            Role labEntryRole = roleRepository.findById(ERole.ROLE_LAB_ENTRY.toString())
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(labEntryRole);
+
+            break;
         default:
           Role userRole = roleRepository.findById(ERole.ROLE_USER.toString())
               .orElseThrow(() -> new RuntimeException("Error: Role is not found."));

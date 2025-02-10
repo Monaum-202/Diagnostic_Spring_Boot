@@ -40,6 +40,7 @@ public class DiagnosticMoneyReceiptService {
         diagnosticMoneyReceipt.setAge(request.getAge());
         diagnosticMoneyReceipt.setSex(request.getSex());
         diagnosticMoneyReceipt.setMobile(request.getMobile());
+        diagnosticMoneyReceipt.setCreatedBy(request.getCreatedBy());
         diagnosticMoneyReceipt.setCreatedAt(LocalDateTime.now());
         diagnosticMoneyReceipt.setTotalAmount(request.getTotalAmount());
         diagnosticMoneyReceipt.setDiscount(request.getDiscount());
@@ -88,6 +89,7 @@ public class DiagnosticMoneyReceiptService {
         existingReceipt.setAge(request.getAge());
         existingReceipt.setSex(request.getSex());
         existingReceipt.setMobile(request.getMobile());
+        existingReceipt.setCreatedBy(request.getCreatedBy());
         existingReceipt.setTotalAmount(request.getTotalAmount());
         existingReceipt.setDiscount(request.getDiscount());
         existingReceipt.setPayableAmount(request.getPayableAmount());

@@ -18,7 +18,7 @@ public class TestController {
   }
 
   @GetMapping("/user")
-  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('LAB_ENTRY') or hasRole('ADMIN')")
   public String userAccess() {
     return "User Content.";
   }
@@ -27,6 +27,12 @@ public class TestController {
   @PreAuthorize("hasRole('MODERATOR')")
   public String moderatorAccess() {
     return "Moderator Board.";
+  }
+
+  @GetMapping("/labEntry")
+  @PreAuthorize("hasRole('LAB_ENTRY')")
+  public String labEntryAccess() {
+    return "LAB_ENTRY Board.";
   }
 
   @GetMapping("/admin")

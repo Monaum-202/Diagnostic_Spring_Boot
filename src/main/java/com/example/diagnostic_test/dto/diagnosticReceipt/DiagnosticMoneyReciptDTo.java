@@ -13,6 +13,7 @@ public class DiagnosticMoneyReciptDTo {
     private String sex;
     private String mobile;
 
+    private String createdBy;
     private double totalAmount;
     private double discount;
     private double payableAmount;
@@ -118,5 +119,13 @@ public class DiagnosticMoneyReciptDTo {
 
     public void setDiagonesticTests(List<DiagonesticTestDTO> diagonesticTests) {
         this.diagonesticTests = diagonesticTests;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

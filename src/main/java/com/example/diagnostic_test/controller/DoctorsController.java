@@ -3,13 +3,16 @@ package com.example.diagnostic_test.controller;
 import com.example.diagnostic_test.entity.Department;
 import com.example.diagnostic_test.entity.DoctorAppointments;
 import com.example.diagnostic_test.entity.Doctors;
+import com.example.diagnostic_test.entity.doctor.DoctorNote;
 import com.example.diagnostic_test.repository.DoctorAppointmentsRepository;
 import com.example.diagnostic_test.repository.DoctorsRepository;
+import com.example.diagnostic_test.service.DoctorNoteService;
 import com.example.diagnostic_test.service.DoctorsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -109,6 +112,61 @@ public class DoctorsController {
 //    }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Autowired
+    private DoctorNoteService doctorNoteService;
+
+    // Get all notes
+    @GetMapping("/doctor-notes")
+    public List<DoctorNote> getAllNotes() {
+        return doctorNoteService.getAllNotes();
+    }
+
+    // Get note by ID
+    @GetMapping("/doctor-notes/{id}")
+    public ResponseEntity<DoctorNote> getNoteById(@PathVariable Long id) {
+        Optional<DoctorNote> note = doctorNoteService.getNoteById(id);
+        return note.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Create new note
+    @PostMapping("/doctor-notes")
+    public DoctorNote createNote(@RequestBody DoctorNote doctorNote) {
+        return doctorNoteService.createNote(doctorNote);
+    }
+
+    // Update note
+    @PutMapping("/doctor-notes/{id}")
+    public ResponseEntity<DoctorNote> updateNote(@PathVariable Long id, @RequestBody DoctorNote doctorNote) {
+        try {
+            DoctorNote updatedNote = doctorNoteService.updateNote(id, doctorNote);
+            return ResponseEntity.ok(updatedNote);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Delete note
+    @DeleteMapping("/doctor-notes/{id}")
+    public ResponseEntity<Void> deleteNote(@PathVariable Long id) {
+        doctorNoteService.deleteNoteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 
 

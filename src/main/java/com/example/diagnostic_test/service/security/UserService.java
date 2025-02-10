@@ -64,6 +64,12 @@ public class UserService {
         roleRepository.save(roleMODERATOR);
 
 
+        Role roleLAB_ENTRY = new Role();
+        roleLAB_ENTRY.setRoleName("ROLE_LAB_ENTRY");
+        roleLAB_ENTRY.setRoleDescription("Default role for newly ROLE_LAB_ENTRY record");
+        roleLAB_ENTRY.setDateCreated(OffsetDateTime.now());
+        roleLAB_ENTRY.setLastUpdated(OffsetDateTime.now());
+        roleRepository.save(roleLAB_ENTRY);
 
 
         Users adminUsers = new Users();
@@ -188,4 +194,8 @@ public class UserService {
         return userPage.map(user -> mapToDTO(user, new UserDTO()));
     }
 
+
+    public List<Object[]> getModerators() {
+        return userRepository.findUsersByRole("ROLE_MODERATOR");
+    }
 }

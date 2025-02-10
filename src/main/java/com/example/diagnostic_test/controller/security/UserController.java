@@ -2,6 +2,7 @@ package com.example.diagnostic_test.controller.security;
 
 
 import com.example.diagnostic_test.dto.security.UserDTO;
+import com.example.diagnostic_test.entity.security.Users;
 import com.example.diagnostic_test.service.security.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.annotation.PostConstruct;
@@ -116,4 +117,10 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-}
+
+    @GetMapping("/moderators")
+    public List<Object[]> getModerators() {
+        return userService.getModerators();
+    }
+
+    }
