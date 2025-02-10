@@ -3,6 +3,7 @@ package com.example.diagnostic_test.dto.diagnosticReceipt;
 import com.example.diagnostic_test.dto.DiagonesticTestDTO;
 import com.example.diagnostic_test.dto.DoctorsDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class DiagnosticMoneyReciptDTo {
@@ -23,7 +24,7 @@ public class DiagnosticMoneyReciptDTo {
     private Long refBy;
     private List<DiagonesticTestDTO> diagonesticTests;
 
-
+    private LocalDateTime createdAt;
 
     public Long getId() {
         return id;

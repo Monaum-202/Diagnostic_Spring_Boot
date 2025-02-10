@@ -1,7 +1,10 @@
 package com.example.diagnostic_test.controller.invoice;
 
 
+import com.example.diagnostic_test.entity.diagonesticEntry.DiagnosticMoneyReceipt;
 import com.example.diagnostic_test.repository.DepartmentRepository;
+import com.example.diagnostic_test.repository.DiagnosticMoneyReceiptRepository;
+import com.example.diagnostic_test.service.DiagnosticMoneyReceiptService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.HtmlExporter;
@@ -14,30 +17,37 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class InvoiceController {
 
 @Autowired
 private DepartmentRepository departmentRepository;
-    @GetMapping(value = "/download/{format}")
-    public ResponseEntity<byte[]> downloadReport(@PathVariable String format) throws JRException, IOException {
 
-        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(departmentRepository.findAll(), false);
+@Autowired
+private DiagnosticMoneyReceiptService diagnosticMoneyReceiptService;
+    @GetMapping(value = "/download")
+    public ResponseEntity<byte[]> downloadReport(@RequestParam("format") String format,@RequestParam("fromDate") LocalDateTime fromDate,@RequestParam("toDate") LocalDateTime toDate) throws JRException, IOException {
+
+        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(diagnosticMoneyReceiptService.getReceiptsByDateRange(fromDate,toDate), false);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("total", "7000");
 
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/department.jrxml"));
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/DiagnosticMoneyRecipt.jrxml"));
         JasperPrint jasperPrint = JasperFillManager.fillReport(compileReport, parameters, beanCollectionDataSource);
 
         byte[] data;
@@ -107,4 +117,7 @@ private DepartmentRepository departmentRepository;
 
         return ResponseEntity.ok().headers(headers).body(data);
     }
+
+
+
 }

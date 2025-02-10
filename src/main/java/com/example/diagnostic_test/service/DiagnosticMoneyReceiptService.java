@@ -1,5 +1,6 @@
 package com.example.diagnostic_test.service;
 
+import com.example.diagnostic_test.dto.diagnosticReceipt.DiagnosticMoneyReciptDTO2;
 import com.example.diagnostic_test.dto.diagnosticReceipt.DiagnosticMoneyReciptDTo;
 import com.example.diagnostic_test.entity.Doctors;
 import com.example.diagnostic_test.entity.diagonesticEntry.DiagnoTests;
@@ -12,7 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -120,5 +126,27 @@ public class DiagnosticMoneyReceiptService {
             Long refById,
             Pageable pageable) {
         return diagnosticMoneyReceiptRepository.searchDiagnosticMoneyReceipts(patientName, mobile, refById, pageable);
+    }
+
+
+    // Method to get all receipts between a date range
+    public List<DiagnosticMoneyReciptDTO2> getReceiptsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        List<DiagnosticMoneyReceipt> results = diagnosticMoneyReceiptRepository.findEventsByCreatedAtRange(startDate, endDate);
+
+
+        List<DiagnosticMoneyReciptDTO2> resultsDto = new ArrayList<>();
+        for (DiagnosticMoneyReceipt diagnosticMoneyReceipt:results
+             ) {
+            DiagnosticMoneyReciptDTO2 diagnosticMoneyReciptDTO2  = new DiagnosticMoneyReciptDTO2(
+                    diagnosticMoneyReceipt.getId(),
+                    diagnosticMoneyReceipt.getCreatedAt(),
+                    diagnosticMoneyReceipt.getTotalAmount(),
+                    diagnosticMoneyReceipt.getPayableAmount(),
+                    diagnosticMoneyReceipt.getPaidAmount()
+            );
+            resultsDto.add(diagnosticMoneyReciptDTO2);
+        }
+
+        return resultsDto;
     }
 }
