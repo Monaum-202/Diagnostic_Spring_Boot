@@ -24,6 +24,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static jakarta.xml.bind.DatatypeConverter.parseInteger;
+import static java.lang.Double.parseDouble;
+import static java.lang.Long.parseLong;
+
 @Service
 public class DiagnosticMoneyReceiptService {
 
@@ -56,7 +60,6 @@ public class DiagnosticMoneyReceiptService {
         diagnosticMoneyReceipt.setDueAmount(request.getDueAmount());
 
 
-
         List<DiagnoTests> diagnoTests = request.getDiagonesticTests().stream().map(dts -> {
             DiagnoTests dt = new DiagnoTests();
             dt.setDiagonesticTest(diagonesticTestRepository.findById(dts.getId()).orElseThrow());
@@ -67,10 +70,8 @@ public class DiagnosticMoneyReceiptService {
         diagnosticMoneyReceipt.setDiagonesticTests(diagnoTests);
 
 
-
         return diagnosticMoneyReceiptRepository.save(diagnosticMoneyReceipt);
     }
-
 
 
     // Get all DiagnosticMoneyReceipts
@@ -136,14 +137,18 @@ public class DiagnosticMoneyReceiptService {
 
 
         List<DiagnosticMoneyReciptDTO2> resultsDto = new ArrayList<>();
-        for (DiagnosticMoneyReceipt diagnosticMoneyReceipt:results
-             ) {
-            DiagnosticMoneyReciptDTO2 diagnosticMoneyReciptDTO2  = new DiagnosticMoneyReciptDTO2(
+        for (DiagnosticMoneyReceipt diagnosticMoneyReceipt : results
+        ) {
+            DiagnosticMoneyReciptDTO2 diagnosticMoneyReciptDTO2 = new DiagnosticMoneyReciptDTO2(
                     diagnosticMoneyReceipt.getId(),
                     diagnosticMoneyReceipt.getCreatedAt(),
                     diagnosticMoneyReceipt.getTotalAmount(),
                     diagnosticMoneyReceipt.getPayableAmount(),
-                    diagnosticMoneyReceipt.getPaidAmount()
+                    diagnosticMoneyReceipt.getPaidAmount(),
+                    diagnosticMoneyReceipt.getCreatedBy(),
+                    diagnosticMoneyReceipt.getDiscount(),
+                    diagnosticMoneyReceipt.getDueAmount(),
+                    diagnosticMoneyReceipt.getRefBy().getId()
             );
             resultsDto.add(diagnosticMoneyReciptDTO2);
         }
@@ -152,7 +157,59 @@ public class DiagnosticMoneyReceiptService {
     }
 
 
-    public List<Object[]> getReceiptById(Long id) {
-        return diagnosticMoneyReceiptRepository.findByReceiptId(id);}
+    public List<DiagnosticMoneyReciptDTO3> getDiagnosticReceiptDetails(Long id) {
+        // Fetch data from repository
+        List<Object[]> results = diagnosticMoneyReceiptRepository.findByReceiptId(id);
 
+        // Convert to DTO list
+        // Convert to DTO list
+        List<DiagnosticMoneyReciptDTO3> receiptDTOs = new ArrayList<>();
+        for (Object[] row : results) {
+            DiagnosticMoneyReciptDTO3 receiptDTO = new DiagnosticMoneyReciptDTO3(
+                    parseLong(row[0]),  // id
+                    (String) row[1],    // patientName
+                    (String) row[2],    // mobile
+                    parseInteger(row[3]), // age
+                    (String) row[4],    // sex
+                    row[5].toString(),  // createdAt (ensure it's a String)
+                    parseDouble(row[6]), // totalAmount
+                    parseDouble(row[7]), // discount
+                    parseDouble(row[8]), // payableAmount
+                    parseDouble(row[9]), // paidAmount
+                    parseDouble(row[10]), // dueAmount
+                    (String) row[11],   // testName
+                    parseDouble(row[12]) // testPrice
+            );
+            receiptDTOs.add(receiptDTO);
+        }
+        return receiptDTOs;
     }
+
+    // Helper Methods to Parse Values Safely
+    private Long parseLong(Object obj) {
+        if (obj instanceof Number) {
+            return ((Number) obj).longValue();
+        } else if (obj instanceof String) {
+            return Long.parseLong((String) obj);
+        }
+        return null;
+    }
+
+    private Integer parseInteger(Object obj) {
+        if (obj instanceof Number) {
+            return ((Number) obj).intValue();
+        } else if (obj instanceof String) {
+            return Integer.parseInt((String) obj);
+        }
+        return null;
+    }
+
+    private Double parseDouble(Object obj) {
+        if (obj instanceof Number) {
+            return ((Number) obj).doubleValue();
+        } else if (obj instanceof String) {
+            return Double.parseDouble((String) obj);
+        }
+        return null;
+    }
+}

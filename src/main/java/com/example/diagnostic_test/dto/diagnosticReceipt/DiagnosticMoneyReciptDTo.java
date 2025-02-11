@@ -10,7 +10,7 @@ public class DiagnosticMoneyReciptDTo {
 
     private Long id;
     private String patientName;
-    private String age;
+    private Integer age;
     private String sex;
     private String mobile;
 
@@ -42,11 +42,11 @@ public class DiagnosticMoneyReciptDTo {
         this.patientName = patientName;
     }
 
-    public String getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

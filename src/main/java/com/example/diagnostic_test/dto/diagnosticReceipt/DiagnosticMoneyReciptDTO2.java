@@ -11,12 +11,25 @@ public class DiagnosticMoneyReciptDTO2 {
     private Double payableAmount;
     private Double paidAmount;
 
-    public DiagnosticMoneyReciptDTO2(Long id, LocalDateTime createdAt, Double totalAmount, Double payableAmount, Double paidAmount) {
+
+    private String createdBy;
+
+    private double discount;
+
+    private double dueAmount;
+
+    private Long refBy;
+
+    public DiagnosticMoneyReciptDTO2(Long id, LocalDateTime createdAt, Double totalAmount, Double payableAmount, Double paidAmount, String createdBy, double discount, double dueAmount, Long refBy) {
         this.id = id;
         this.createdAt = createdAt;
         this.totalAmount = totalAmount;
         this.payableAmount = payableAmount;
         this.paidAmount = paidAmount;
+        this.createdBy = createdBy;
+        this.discount = discount;
+        this.dueAmount = dueAmount;
+        this.refBy = refBy;
     }
 
     public Long getId() {
@@ -57,5 +70,38 @@ public class DiagnosticMoneyReciptDTO2 {
 
     public void setPaidAmount(Double paidAmount) {
         this.paidAmount = paidAmount;
+    }
+
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public double getDueAmount() {
+        return dueAmount;
+    }
+
+    public void setDueAmount(double dueAmount) {
+        this.dueAmount = dueAmount;
+    }
+
+    public Long getRefBy() {
+        return refBy;
+    }
+
+    public void setRefBy(Long refBy) {
+        this.refBy = refBy;
     }
 }

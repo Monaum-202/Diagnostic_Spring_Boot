@@ -124,7 +124,7 @@ private DiagnosticMoneyReceiptService diagnosticMoneyReceiptService;
     @GetMapping(value = "/receipt/download")
     public ResponseEntity<byte[]> downloadReport(@RequestParam("format") String format,@RequestParam("id") Long id) throws JRException, IOException {
 
-        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(diagnosticMoneyReceiptService.getReceiptById(id), false);
+        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(diagnosticMoneyReceiptService.getDiagnosticReceiptDetails(id), false);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("total", "7000");

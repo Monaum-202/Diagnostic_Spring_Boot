@@ -8,32 +8,32 @@
     </queryString>
     <field name="id" class="java.lang.Long">
     </field>
-    <field name="patient_name" class="java.lang.String">
+    <field name="patientName" class="java.lang.String">
     </field>
     <field name="mobile" class="java.lang.String">
     </field>
-    <field name="age" class="java.lang.String">
+    <field name="age" class="java.lang.Integer">
     </field>
     <field name="sex" class="java.lang.String">
     </field>
-    <field name="created_at" class="java.time.LocalDateTime">
+    <field name="createdAt" class="java.time.LocalDateTime">
     </field>
-    <field name="total_amount" class="java.lang.Double">
+    <field name="totalAmount" class="java.lang.Double">
     </field>
     <field name="discount" class="java.lang.Double">
     </field>
-    <field name="payable_amount" class="java.lang.Double">
+    <field name="payableAmount" class="java.lang.Double">
     </field>
-    <field name="paid_amount" class="java.lang.Double">
+    <field name="paidAmount" class="java.lang.Double">
     </field>
-    <field name="due_amount" class="java.lang.Double">
+    <field name="dueAmount" class="java.lang.Double">
     </field>
-    <field name="name" class="java.lang.String">
+    <field name="testName" class="java.lang.String">
     </field>
-    <field name="price" class="java.lang.Double">
+    <field name="testPrice" class="java.lang.Double">
     </field>
     <variable name="Total_Paid" class="java.lang.Double" calculation="Sum">
-        <variableExpression><![CDATA[$F{paid_amount}]]></variableExpression>
+        <variableExpression><![CDATA[$F{paidAmount}]]></variableExpression>
     </variable>
     <variable name="discount_SUM" class="java.lang.Double" calculation="Sum">
         <variableExpression><![CDATA[$F{discount}]]></variableExpression>
@@ -77,7 +77,7 @@
                 <textElement textAlignment="Left" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{patient_name}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{patientName}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="90" y="28" width="100" height="23" uuid="cc2fbe40-bc39-4018-92c7-703237344aa0"/>
@@ -287,7 +287,7 @@
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="12"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{testName}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="380" y="0" width="135" height="30" uuid="af9f13df-889f-4573-9014-b02a583934ff">
@@ -302,7 +302,7 @@
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="12"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{testPrice}]]></textFieldExpression>
             </textField>
         </band>
     </detail>
@@ -322,7 +322,7 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{due_amount}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{dueAmount}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="380" y="80" width="135" height="20" uuid="3c1952b8-e606-43a5-8ee0-d6622c1f3c36">
@@ -338,7 +338,7 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{payable_amount}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{payableAmount}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="280" y="0" width="100" height="20" uuid="f35099ec-2f4d-49dc-83b3-983915426023"/>
@@ -436,7 +436,7 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="380" y="20" width="135" height="20" uuid="fef6c400-f3c2-4d93-b7d6-4eaf98cbec2e"/>
@@ -450,7 +450,7 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="380" y="40" width="135" height="20" uuid="f4d589c8-517f-44f7-b761-4d1d45347f1a"/>
@@ -478,7 +478,7 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{paid_amount}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{paidAmount}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="380" y="60" width="135" height="20" uuid="49e403fd-af99-41f8-b74f-6cf99be77f63"/>
@@ -492,7 +492,7 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{total_amount}*($F{discount}/100)]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{totalAmount}*($F{discount}/100)]]></textFieldExpression>
             </textField>
         </band>
     </columnFooter>
