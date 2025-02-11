@@ -1,6 +1,7 @@
 package com.example.diagnostic_test.service;
 
 import com.example.diagnostic_test.dto.diagnosticReceipt.DiagnosticMoneyReciptDTO2;
+import com.example.diagnostic_test.dto.diagnosticReceipt.DiagnosticMoneyReciptDTO3;
 import com.example.diagnostic_test.dto.diagnosticReceipt.DiagnosticMoneyReciptDTo;
 import com.example.diagnostic_test.entity.Doctors;
 import com.example.diagnostic_test.entity.diagonesticEntry.DiagnoTests;
@@ -149,4 +150,9 @@ public class DiagnosticMoneyReceiptService {
 
         return resultsDto;
     }
-}
+
+
+    public List<Object[]> getReceiptById(Long id) {
+        return diagnosticMoneyReceiptRepository.findByReceiptId(id);}
+
+    }

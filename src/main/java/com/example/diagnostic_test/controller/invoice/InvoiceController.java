@@ -120,4 +120,85 @@ private DiagnosticMoneyReceiptService diagnosticMoneyReceiptService;
 
 
 
+
+    @GetMapping(value = "/receipt/download")
+    public ResponseEntity<byte[]> downloadReport(@RequestParam("format") String format,@RequestParam("id") Long id) throws JRException, IOException {
+
+        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(diagnosticMoneyReceiptService.getReceiptById(id), false);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("total", "7000");
+
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/MoneyRecipt.jrxml"));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(compileReport, parameters, beanCollectionDataSource);
+
+        byte[] data;
+        HttpHeaders headers = new HttpHeaders();
+
+        switch (format.toLowerCase()) {
+            case "pdf":
+                data = JasperExportManager.exportReportToPdf(jasperPrint);
+                headers.setContentType(MediaType.APPLICATION_PDF);
+                headers.add("Content-Disposition", "inline; filename=report.pdf");
+                break;
+
+            case "html":
+                ByteArrayOutputStream htmlOutput = new ByteArrayOutputStream();
+                HtmlExporter htmlExporter = new HtmlExporter();
+                htmlExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                htmlExporter.setExporterOutput(new SimpleHtmlExporterOutput(htmlOutput));
+                htmlExporter.exportReport();
+
+                data = htmlOutput.toByteArray();
+                headers.setContentType(MediaType.TEXT_HTML);
+                headers.add("Content-Disposition", "inline; filename=report.html");
+                break;
+
+
+            case "xlsx":
+                ByteArrayOutputStream xlsxOutput = new ByteArrayOutputStream();
+                JRXlsxExporter exporter = new JRXlsxExporter();
+                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(xlsxOutput));
+                SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+                configuration.setOnePagePerSheet(true);
+                configuration.setDetectCellType(true);
+                exporter.setConfiguration(configuration);
+                exporter.exportReport();
+                data = xlsxOutput.toByteArray();
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.add("Content-Disposition", "attachment; filename=report.xlsx");
+                break;
+
+            case "csv":
+                ByteArrayOutputStream csvOutput = new ByteArrayOutputStream();
+                JRCsvExporter csvExporter = new JRCsvExporter();
+                csvExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                csvExporter.setExporterOutput(new SimpleWriterExporterOutput(csvOutput));
+                SimpleCsvExporterConfiguration csvConfig = new SimpleCsvExporterConfiguration();
+                csvExporter.setConfiguration(csvConfig);
+                csvExporter.exportReport();
+                data = csvOutput.toByteArray();
+                headers.setContentType(MediaType.TEXT_PLAIN);
+                headers.add("Content-Disposition", "attachment; filename=report.csv");
+                break;
+
+            case "docx":
+                ByteArrayOutputStream docxOutput = new ByteArrayOutputStream();
+                JRDocxExporter docxExporter = new JRDocxExporter();
+                docxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                docxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(docxOutput));
+                docxExporter.exportReport();
+                data = docxOutput.toByteArray();
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.add("Content-Disposition", "attachment; filename=report.docx");
+                break;
+            default:
+                return ResponseEntity.badRequest().body(null);
+        }
+
+        return ResponseEntity.ok().headers(headers).body(data);
+    }
+
+
 }

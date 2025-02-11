@@ -1,5 +1,6 @@
 package com.example.diagnostic_test.repository;
 
+import com.example.diagnostic_test.dto.diagnosticReceipt.DiagnosticMoneyReciptDTO3;
 import com.example.diagnostic_test.entity.diagonesticEntry.DiagnosticMoneyReceipt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +39,21 @@ public interface DiagnosticMoneyReceiptRepository extends JpaRepository<Diagnost
     List<DiagnosticMoneyReceipt> findEventsByCreatedAtRange(LocalDateTime fromDate, LocalDateTime toDate);
 
     List<DiagnosticMoneyReceipt> findByCreatedAtBetween(LocalDateTime fromDate, LocalDateTime toDate);
+
+//    @Query("SELECT DiagnosticMoneyReciptDTO3(d.id, d.patientName, d.mobile, d.age, d.sex, d.createdAt, d.totalAmount, d.discount, d.payableAmount, d.paidAmount, d.dueAmount, dtt.name, dtt.price) " +
+//            "FROM DiagnosticMoneyReceipt d " +
+//            "LEFT JOIN DiagnoTests dt ON d.id = dt.diagnosticMoneyReceipt.id " +
+//            "LEFT JOIN DiagonesticTest dtt ON dt.diagonesticTest.id = dtt.id " +
+//            "WHERE d.id = :id")
+//    List<DiagnosticMoneyReciptDTO3> getDiagnosticMoneyReceiptById(@Param("id") Long id);
+
+
+    @Query(value = "SELECT d.id, d.patient_name, d.mobile, d.age, d.sex, d.created_at, d.total_amount, d.discount, d.payable_amount, d.paid_amount, d.due_amount, dtt.name, dtt.price " +
+            "FROM diagnostic_money_receipt d " +
+            "LEFT JOIN diagno_tests dt ON d.id = dt.diagnostic_money_receipt_id " +
+            "LEFT JOIN diagonestic_test dtt ON dt.diagonestic_test_id = dtt.id " +
+            "WHERE d.id = :id", nativeQuery = true)
+    List<Object[]> findByReceiptId(@Param("id") Long id);
+
 
 }
