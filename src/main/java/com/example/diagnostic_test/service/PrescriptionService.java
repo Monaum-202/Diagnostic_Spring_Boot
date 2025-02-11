@@ -2,6 +2,7 @@ package com.example.diagnostic_test.service;
 
 
 import com.example.diagnostic_test.dto.prescription.PrescriptionDTO;
+import com.example.diagnostic_test.dto.prescription.PrescriptionDTO2;
 import com.example.diagnostic_test.entity.Doctors;
 import com.example.diagnostic_test.entity.Prescription.Prescription;
 import com.example.diagnostic_test.entity.Prescription.PrescriptionMedicine;
@@ -16,7 +17,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -151,5 +158,108 @@ public class PrescriptionService {
 //                .orElseThrow(() -> new RuntimeException("Prescription not found"));
 //    }
 
+    public List<PrescriptionDTO2> getPrescriptionDetails(Long id) {
+        // Fetch data from repository
+        List<Object[]> results = prescriptionRepository.findPrescriptionById(id);
 
+        // Convert to DTO list
+        List<PrescriptionDTO2> prescriptionDTOs = new ArrayList<>();
+        for (Object[] row : results) {
+            PrescriptionDTO2 prescriptionDTO = new PrescriptionDTO2(
+                    parseLong(row[0]),           // id
+                    (String) row[1],            // name
+                    (String) row[2],            // phone
+                    (String) row[3],            // sex
+                    parseInteger(row[4]),       // age
+                    formatDate(row[5]),         // createdAt (String format)
+                    (String) row[6],            // advice
+                    formatDate(row[7]),     // followup (LocalDate)
+                    (String) row[8],            // investigation
+                    (String) row[9],            // diagnosis
+                    (String) row[10],           // complaints
+                    (String) row[11],           // medicine
+                    (String) row[12],           // dosage
+                    (String) row[13],           // frequency
+                    (String) row[14]            // duration
+            );
+            prescriptionDTOs.add(prescriptionDTO);
+        }
+        return prescriptionDTOs;
+    }
+    private Long parseLong(Object obj) {
+        return (obj != null) ? ((Number) obj).longValue() : null;
+    }
+
+    private Integer parseInteger(Object obj) {
+        return (obj != null) ? ((Number) obj).intValue() : null;
+    }
+
+    private String safeCast(Object obj) {
+        return (obj != null) ? obj.toString() : null;
+    }
+
+    private String formatDate(Object obj) {
+        if (obj instanceof java.sql.Timestamp) {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format((java.sql.Timestamp) obj);
+        }
+        return null;
+    }
+
+    private LocalDate parseLocalDate(Object obj) {
+        if (obj instanceof java.sql.Date) {
+            return ((java.sql.Date) obj).toLocalDate();
+        }
+        return null;
+    }
+
+//    // Helper Methods to Parse Values Safely
+//    private Long parseLong(Object obj) {
+//        if (obj instanceof Number) {
+//            return ((Number) obj).longValue();
+//        } else if (obj instanceof String) {
+//            return Long.parseLong((String) obj);
+//        }
+//        return null;
+//    }
+//
+//    private Integer parseInteger(Object obj) {
+//        if (obj instanceof Number) {
+//            return ((Number) obj).intValue();
+//        } else if (obj instanceof String) {
+//            return Integer.parseInt((String) obj);
+//        }
+//        return null;
+//    }
+//
+//    // Convert java.sql.Date or Timestamp to String (formatted)
+//    private String formatDate(Object obj) {
+//        if (obj instanceof Date) {
+//            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format((Date) obj);
+//        } else if (obj instanceof Timestamp) {
+//            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format((Timestamp) obj);
+//        }
+//        return obj != null ? obj.toString() : null;
+//    }
+//
+//    // Convert java.sql.Timestamp or java.sql.Date to LocalDateTime
+//    private LocalDateTime parseLocalDateTime(Object obj) {
+//        if (obj instanceof Timestamp) {
+//            return ((Timestamp) obj).toLocalDateTime();
+//        } else if (obj instanceof Date) {
+//            return ((Date) obj).toLocalDate().atStartOfDay();
+//        } else if (obj instanceof String) {
+//            return LocalDateTime.parse((String) obj, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        }
+//        return null;
+//    }
+//
+//    // Convert java.sql.Date or String to LocalDate
+//    private LocalDate parseLocalDate(Object obj) {
+//        if (obj instanceof Date) {
+//            return ((Date) obj).toLocalDate();
+//        } else if (obj instanceof String) {
+//            return LocalDate.parse((String) obj, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        }
+//        return null;
+//    }
 }

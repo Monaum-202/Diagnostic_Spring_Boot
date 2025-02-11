@@ -5,6 +5,7 @@ import com.example.diagnostic_test.entity.diagonesticEntry.DiagnosticMoneyReceip
 import com.example.diagnostic_test.repository.DepartmentRepository;
 import com.example.diagnostic_test.repository.DiagnosticMoneyReceiptRepository;
 import com.example.diagnostic_test.service.DiagnosticMoneyReceiptService;
+import com.example.diagnostic_test.service.PrescriptionService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.HtmlExporter;
@@ -39,6 +40,97 @@ private DepartmentRepository departmentRepository;
 
 @Autowired
 private DiagnosticMoneyReceiptService diagnosticMoneyReceiptService;
+
+@Autowired
+private PrescriptionService prescriptionService;
+
+
+    @GetMapping(value = "/prescription/download")
+    public ResponseEntity<byte[]> downloadPrescription(@RequestParam("format") String format,@RequestParam("id") Long id) throws JRException, IOException {
+
+        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(prescriptionService.getPrescriptionDetails(id), false);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("total", "7000");
+
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/Prescription.jrxml"));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(compileReport, parameters, beanCollectionDataSource);
+
+        byte[] data;
+        HttpHeaders headers = new HttpHeaders();
+
+        switch (format.toLowerCase()) {
+            case "pdf":
+                data = JasperExportManager.exportReportToPdf(jasperPrint);
+                headers.setContentType(MediaType.APPLICATION_PDF);
+                headers.add("Content-Disposition", "inline; filename=report.pdf");
+                break;
+
+            case "html":
+                ByteArrayOutputStream htmlOutput = new ByteArrayOutputStream();
+                HtmlExporter htmlExporter = new HtmlExporter();
+                htmlExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                htmlExporter.setExporterOutput(new SimpleHtmlExporterOutput(htmlOutput));
+                htmlExporter.exportReport();
+
+                data = htmlOutput.toByteArray();
+                headers.setContentType(MediaType.TEXT_HTML);
+                headers.add("Content-Disposition", "inline; filename=report.html");
+                break;
+
+
+            case "xlsx":
+                ByteArrayOutputStream xlsxOutput = new ByteArrayOutputStream();
+                JRXlsxExporter exporter = new JRXlsxExporter();
+                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(xlsxOutput));
+                SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+                configuration.setOnePagePerSheet(true);
+                configuration.setDetectCellType(true);
+                exporter.setConfiguration(configuration);
+                exporter.exportReport();
+                data = xlsxOutput.toByteArray();
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.add("Content-Disposition", "attachment; filename=report.xlsx");
+                break;
+
+            case "csv":
+                ByteArrayOutputStream csvOutput = new ByteArrayOutputStream();
+                JRCsvExporter csvExporter = new JRCsvExporter();
+                csvExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                csvExporter.setExporterOutput(new SimpleWriterExporterOutput(csvOutput));
+                SimpleCsvExporterConfiguration csvConfig = new SimpleCsvExporterConfiguration();
+                csvExporter.setConfiguration(csvConfig);
+                csvExporter.exportReport();
+                data = csvOutput.toByteArray();
+                headers.setContentType(MediaType.TEXT_PLAIN);
+                headers.add("Content-Disposition", "attachment; filename=report.csv");
+                break;
+
+            case "docx":
+                ByteArrayOutputStream docxOutput = new ByteArrayOutputStream();
+                JRDocxExporter docxExporter = new JRDocxExporter();
+                docxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                docxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(docxOutput));
+                docxExporter.exportReport();
+                data = docxOutput.toByteArray();
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.add("Content-Disposition", "attachment; filename=report.docx");
+                break;
+            default:
+                return ResponseEntity.badRequest().body(null);
+        }
+
+        return ResponseEntity.ok().headers(headers).body(data);
+    }
+
+
+
+
+
+
+
+
     @GetMapping(value = "/download")
     public ResponseEntity<byte[]> downloadReport(@RequestParam("format") String format,@RequestParam("fromDate") LocalDateTime fromDate,@RequestParam("toDate") LocalDateTime toDate) throws JRException, IOException {
 
