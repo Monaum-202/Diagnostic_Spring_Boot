@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class PrescriptionMapper {
     public static Prescription toEntity(PrescriptionDTO dto) {
         Prescription prescription = new Prescription();
+        prescription.setId(dto.getId());
         prescription.setName(dto.getName());
         prescription.setPhone(dto.getPhone());
         prescription.setAge(dto.getAge());
@@ -51,6 +52,7 @@ public class PrescriptionMapper {
 
     public static PrescriptionDTO toDTO(Prescription prescription) {
         PrescriptionDTO dto = new PrescriptionDTO();
+        dto.setId(prescription.getId());
         dto.setName(prescription.getName());
         dto.setPhone(prescription.getPhone());
         dto.setAge(prescription.getAge());
